@@ -1,0 +1,7 @@
+,target,feature_set,adj_r2,n_obs
+0,fx_ret,TW-only,0.0185,134
+1,fx_ret,Global-only,0.0064,237
+2,eq_ret,TW-only,0.0019,134
+3,eq_ret,Global-only,0.639,253
+4,rate_chg,TW-only,0.1084,134
+5,rate_chg,Global-only,0.1956,253

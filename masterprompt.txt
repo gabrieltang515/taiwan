@@ -1,0 +1,352 @@
+You are helping me build a 1-week hedge-fund-style macro research project in Python.
+
+Project title:
+Taiwan Cross-Asset Macro Playbook: What moves USD/TWD, Taiwan equities, and Taiwan rates?
+
+Context:
+This is for a student investment fund club with a hedge-fund orientation. I want a serious but feasible project that uses data, code, charts, and econometric/statistical modeling. The goal is NOT a generic country report. The goal is to build a reproducible research pipeline that studies which macro and market variables explain and predict Taiwan FX, equities, and rates.
+
+Important scope constraints:
+- Limit this to what is feasible in about 1 week of work by one student.
+- The code must be simple enough that I can study it properly and answer questions about it.
+- Focus on explanatory models, predictive models, and only LIGHT regime analysis.
+- Do NOT build a dashboard or app.
+- Do NOT overcomplicate with advanced ML unless it clearly adds value.
+- Prefer clean, transparent, interpretable models over fancy ones.
+- Use official/publicly accessible data where reasonably possible, but if some market series are easier via yfinance/FRED/stooq or similar, that is acceptable.
+- Prioritize working code, clean structure, and reproducibility.
+
+Core research question:
+Which macro, external, and global variables best explain and predict Taiwan’s:
+1. FX: USD/TWD
+2. Equities: Taiwan equity market
+3. Rates: Taiwan policy/short-end/local yield proxy
+
+Desired framing:
+Taiwan is an export-led, semiconductor-heavy, current-account-surplus economy. I want to test whether external-sector and tech-cycle variables drive Taiwan assets, while controlling for global macro variables like DXY, US yields, global tech beta, and volatility.
+
+Your job:
+Design and implement the project as a clean Python research repo. Be practical, rigorous, and selective. Do not dump abstract ideas. Produce code and files that can actually run, with sensible fallbacks if some datasets are hard to retrieve automatically.
+
+Main deliverables:
+1. A clean project folder structure
+2. A requirements.txt
+3. Python scripts/modules for:
+   - data ingestion
+   - cleaning
+   - feature engineering
+   - explanatory models
+   - predictive models
+   - simple regime analysis
+   - plotting / output tables
+4. One main notebook that ties the workflow together
+5. A short README explaining setup and workflow
+6. A final list of charts/tables the project should output
+7. A clear statement of assumptions and simplifications
+
+Scope of the actual analysis
+
+A. Assets to model
+Please implement these three target areas:
+
+1. FX
+- Main target: USD/TWD returns
+- Use monthly as the default core modeling frequency unless a higher-frequency implementation is clearly simple
+- If needed, predict next-month, next-5-day, or next-20-day FX returns using lagged monthly features
+
+2. Equities
+- Main target: Taiwan equity market return
+- Prefer TAIEX if accessible programmatically; if not, use a reasonable Taiwan equity proxy ETF and clearly document the substitution
+- TSMC can be optional only if easy
+
+3. Rates
+- Main target: a feasible Taiwan rates proxy
+- This can be the policy rate, short-term rate, or government yield proxy depending on what can be sourced cleanly
+- If high-frequency Taiwan local yield data is hard to obtain, use a lower-frequency rates model and document the limitation
+
+B. Explanatory variables
+Build a manageable and interpretable feature set. Include as many of the following as feasible:
+
+Taiwan-specific macro/external features:
+- exports growth
+- imports growth
+- trade balance
+- current account balance
+- CPI or inflation
+- policy rate
+- industrial production or export orders if reasonably accessible
+- reserve assets if accessible
+- semiconductor / electronics export proxy if accessible
+
+Global controls:
+- DXY or broad USD proxy
+- US 2Y yield
+- US 10Y yield
+- Nasdaq and/or SOX proxy
+- VIX
+- oil price proxy
+
+Feature design principles:
+- Create lagged versions
+- Create YoY and MoM / rolling changes where appropriate
+- Standardize or z-score features only where useful
+- Avoid too many features relative to sample size
+- Keep final models interpretable
+- Prefer a smaller, better-motivated feature set over a huge feature dump
+
+C. Model scope
+Build only the following:
+
+1. Explanatory models
+Goal:
+Identify which variables explain contemporaneous or near-contemporaneous moves in Taiwan FX, equities, and rates.
+
+Methods:
+- summary statistics
+- correlation analysis
+- OLS / linear regression
+- rolling correlation
+- optionally rolling regression if simple
+
+2. Predictive models
+Goal:
+Test whether lagged macro and global variables help predict future asset returns or rate changes.
+
+Methods:
+- baseline linear regression
+- Ridge and/or Lasso
+- logistic regression for directional prediction if useful
+- optional simple tree-based model only as a minor robustness check, not a core model
+
+3. Simple regime analysis
+Goal:
+Check whether relationships differ across a few intuitive market regimes.
+
+Important:
+Keep regime analysis VERY SIMPLE and easy to explain.
+
+Allowed regime approaches:
+- risk-on vs risk-off, based on VIX threshold or Nasdaq / SOX sign
+- strong USD vs weak USD, based on DXY trend
+- tech-upcycle vs tech-downcycle, based on semiconductor / Nasdaq rolling momentum
+
+For regime analysis, do only:
+- split sample into 2 regimes
+- compare average returns / correlations / model coefficients across regimes
+- maybe run the same regression separately in each regime
+
+Do NOT:
+- build HMMs
+- build Markov-switching models
+- do unsupervised clustering unless extremely simple
+- create anything too hard to defend in a student presentation
+
+D. Time horizon and frequencies
+Choose frequencies pragmatically.
+
+Default preference:
+- monthly macro features
+- monthly modeling frequency as the main setup
+- optional daily market plots if simple
+- use lagged monthly features to predict next-month asset return / change
+
+If exact release-date alignment is too much for a 1-week project, use simplified lagged month-end alignment and explicitly state that assumption.
+
+E. What I want you to produce in code
+Please generate a complete, minimal-but-serious Python research repository with the following:
+
+1. Folder structure
+Something like:
+- data/raw
+- data/processed
+- notebooks
+- src
+- outputs/charts
+- outputs/tables
+
+2. Files/modules
+At minimum:
+- src/config.py
+- src/data_ingest.py
+- src/data_cleaning.py
+- src/feature_engineering.py
+- src/models_explanatory.py
+- src/models_predictive.py
+- src/regime_analysis.py
+- src/plotting.py
+- src/utils.py
+- notebooks/main_analysis.ipynb
+- README.md
+- requirements.txt
+
+3. Code requirements
+- Use pandas, numpy, matplotlib, scikit-learn, statsmodels
+- Use pathlib and clean relative paths
+- Add docstrings and comments
+- Make code modular and readable
+- Include error handling where appropriate
+- Save processed datasets to csv/parquet
+- Save charts and result tables to outputs/
+- Keep functions short and understandable
+
+4. Main notebook
+The notebook should:
+- load processed data
+- show exploratory charts
+- run explanatory models
+- run predictive models
+- run simple regime comparisons
+- output evaluation tables
+- save key charts
+
+F. Specific tasks I want implemented
+Please implement the following unless impossible:
+
+1. Data pipeline
+- Download or load each dataset
+- Standardize date columns
+- Merge into a master dataframe
+- Save a processed modeling dataset
+
+2. Exploratory analysis
+- Summary statistics
+- Missing data report
+- Correlation heatmap
+- Time series plots for major variables
+
+3. Explanatory modeling
+For each target (FX, equities, rates):
+- run baseline OLS with a small core feature set
+- run a richer OLS with Taiwan + global controls
+- summarize coefficients, t-stats, R-squared
+- produce a compact regression summary table
+
+4. Predictive modeling
+For each target:
+- define future return / change targets
+- train/test split using time ordering, never random shuffle
+- run baseline linear regression
+- run Ridge or Lasso
+- optionally run logistic regression for up/down direction
+- report out-of-sample metrics
+
+Suggested metrics:
+- RMSE / MAE for regression
+- directional accuracy for sign prediction
+- R-squared if appropriate, but do not overstate it
+- simple comparison versus naive benchmark
+
+5. Simple regime analysis
+For 1-2 regime definitions only:
+- define regime flag
+- compare average target behavior by regime
+- compare correlations by regime
+- optionally rerun one explanatory model by regime
+
+Keep this section lightweight and presentation-friendly.
+
+6. Lightweight robustness checks
+- multicollinearity inspection or VIF where sensible
+- compare Taiwan-specific features versus global-only features
+- optional rolling coefficient chart if easy
+
+G. Research standards / methodology requirements
+Please enforce these standards:
+
+1. No lookahead bias
+All predictive features must be lagged appropriately.
+
+2. Interpretability first
+The final models should be explainable in plain English.
+
+3. Time-series aware validation
+Use train/test split by date, not random CV.
+If using cross-validation, use a time-series-aware approach only.
+
+4. Feasibility over perfection
+If a dataset is hard to source automatically, create a clear placeholder loader and explain what manual CSV input is expected.
+
+5. Honest documentation
+Clearly document all shortcuts:
+- proxy substitutions
+- release-date simplifications
+- low-frequency alignment assumptions
+- missing-data handling
+
+H. Output expectations
+At the end, I want the project to generate:
+
+Charts:
+- Taiwan exports / external balance over time
+- USD/TWD over time
+- Taiwan equity index over time
+- Taiwan rate proxy over time
+- rolling correlation charts
+- actual vs predicted plots for at least one target
+- coefficient / feature importance plots if useful
+- simple regime comparison chart
+
+Tables:
+- summary stats
+- missing data summary
+- regression results table
+- predictive performance table
+- simple regime comparison table
+- feature list / data dictionary
+
+I. Working style for you
+Please do this in a deliberate sequence.
+
+Step 1:
+Propose and create the folder/file structure.
+
+Step 2:
+Implement data ingestion with sensible source choices and fallbacks.
+
+Step 3:
+Implement cleaning and feature engineering.
+
+Step 4:
+Implement explanatory models.
+
+Step 5:
+Implement predictive models.
+
+Step 6:
+Implement simple regime analysis.
+
+Step 7:
+Create the main notebook and README.
+
+At each step:
+- explain design choices briefly
+- keep code runnable
+- avoid unnecessary complexity
+
+J. Important decision rules
+Please make sensible choices without asking me too many questions.
+Default preferences:
+- use monthly frequency as the core modeling frequency
+- use simple, transparent models first
+- use Taiwan-specific official macro data where possible
+- use accessible global financial data sources where practical
+- prioritize a working end-to-end repo over perfect data sophistication
+- if something is too complex for a 1-week project, simplify it
+
+K. Final output format
+I want you to respond by producing:
+
+1. A brief implementation plan
+2. The full proposed folder structure
+3. The code for each file, one by one
+4. Any setup instructions
+5. A short note on what I may need to manually download if automation fails
+
+Do not just give suggestions. Start building the actual project files and code.
+
+Also:
+- If a data source is uncertain, pick a practical proxy and document it
+- If a market series ticker is unreliable, provide one fallback
+- If a Taiwan rate series is difficult, simplify the rates section but keep it in scope
+- Keep everything realistic for a 1-week student project
+- Keep the code understandable enough that I can explain it in a presentation / Q&A
